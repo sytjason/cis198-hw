@@ -52,31 +52,81 @@ pub mod problem1 {
     }
 }
 
-// pub mod problem2 {
-//     pub fn mat_mult(mat1: &Matrix, mat2: &Matrix) -> Matrix {
-//         todo!();
-//     }
-//
-//     #[cfg(test)]
-//     mod tests{
-//         use super::mat_mult;
-//         #[test]
-//         fn test_mat_mult_identity() {
-//             let mut mat1 = vec![vec![0.;3]; 3];
-//             for i in 0..mat1.len() {
-//                 mat1[i][i] = 1.;
-//             }
-//             let mat2 = vec![vec![5.;3]; 3];
-//             let result = mat_mult(&mat1, &mat2);
-//             for i in 0..result.len() {
-//                 for j in 0..result[i].len() {
-//                     assert_eq!(result[i][j], mat2[i][j]);
-//                 }
-//             }
-//         }
-//     }
-// }
-//
+pub mod problem2 {
+    pub type Matrix = Vec<Vec<f32>>;
+
+    pub fn mat_mult(mat1: &Matrix, mat2: &Matrix) -> Matrix {
+        let size = mat1.len();
+        let mut ans: Matrix = vec![vec![0.; size]; size];
+        for i in 0..size {
+            for j in 0..size {
+                let mut sum = 0.;
+                for l in 0..size {
+                    sum += mat1[i][l] * mat2[l][j];
+                }
+                ans[i][j] = sum;
+            }
+        }
+        ans
+    }
+
+    #[cfg(test)]
+    mod tests{
+        use super::mat_mult;
+        #[test]
+        fn test_mat_mult_identity() {
+            let mut mat1 = vec![vec![0.;3]; 3];
+            for i in 0..mat1.len() {
+                mat1[i][i] = 1.;
+            }
+            let mat2 = vec![vec![5.;3]; 3];
+            let result = mat_mult(&mat1, &mat2);
+            for i in 0..result.len() {
+                for j in 0..result[i].len() {
+                    assert_eq!(result[i][j], mat2[i][j]);
+                }
+            }
+        }
+
+        #[test]
+        fn test_mat_mult_normal() {
+            let mut mat1 = vec![vec![0.;3]; 3];
+            let mut cnt = 0;
+            // mat1:
+            //   0 1 2
+            //   3 4 5
+            //   6 7 8
+            for i in 0..mat1.len() {
+                for j in 0..mat1.len() {
+                    mat1[i][j] = cnt as f32;
+                    cnt += 1;
+                }
+            }
+            // mat2:
+            //   0 1 2
+            //   1 2 3
+            //   2 3 4
+            let mut mat2 = vec![vec![0.;3]; 3];
+            for i in 0..mat2.len() {
+                for j in 0..mat2.len() {
+                    mat2[i][j] = (i + j) as f32;
+                }
+            }
+            let result = mat_mult(&mat1, &mat2);
+            let ans = vec![
+                vec![5.,8.,11.],
+                vec![14.,26.,38.],
+                vec![23.,44.,65.]
+            ];
+            for i in 0..result.len() {
+                for j in 0..result[i].len() {
+                    assert_eq!(result[i][j], ans[i][j]);
+                }
+            }
+        }
+    }
+}
+
 // pub mod problem3 {
 //     pub fn sieve(n: u32) -> Vec<u32> {
 //         todo!();
@@ -93,7 +143,6 @@ pub mod problem1 {
 // }
 //
 // pub mod problem4 {
-//     pub type Matrix = Vec<Vec<f32>>;
 //
 //     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 //     pub enum Peg {
